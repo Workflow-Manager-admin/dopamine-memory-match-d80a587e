@@ -1,0 +1,4 @@
+{
+    "command": "npm run test",
+    "working_directory": "/home/kavia/workspace/code-generation/dopamine-memory-match-d80a587e/memory_flip_frontend"
+}

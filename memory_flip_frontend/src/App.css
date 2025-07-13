@@ -1,104 +1,268 @@
-/* CSS Variables for Theme Management */
+/* Dopamine-rich memory flip game styles */
+
+/* Main palette */
 :root {
-  /* Light theme colors */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --text-primary: #282c34;
-  --text-secondary: #61dafb;
-  --border-color: #e9ecef;
-  --button-bg: #007bff;
-  --button-text: #ffffff;
+  --primary: #f7b32b;
+  --secondary: #6ccff6;
+  --accent: #f8696b;
+  --card-front: #fff;
+  --card-back: var(--primary);
+  --card-match: var(--secondary);
+  --border: #e2e2e2;
+  --score-bg: #f8f8fa;
+  --footer-bg: #eeeeee;
+  --text-main: #2d313a;
+  --shadow: 0 2px 10px 0 rgba(76, 86, 219, 0.06);
 }
 
-[data-theme="dark"] {
-  /* Dark theme colors */
-  --bg-primary: #1a1a1a;
-  --bg-secondary: #282c34;
-  --text-primary: #ffffff;
-  --text-secondary: #61dafb;
-  --border-color: #404040;
-  --button-bg: #0056b3;
-  --button-text: #ffffff;
+html, body, #root {
+  height: 100%;
 }
 
-.App {
-  text-align: center;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
+body {
+  margin: 0;
+  background: radial-gradient(ellipse at top, var(--primary) 10%, var(--secondary) 80%);
   min-height: 100vh;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  font-family: 'Segoe UI', 'Roboto', 'Arial', 'sans-serif';
+  color: var(--text-main);
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: var(--bg-secondary);
+.memory-app-bg {
   min-height: 100vh;
+  background: linear-gradient(120deg, var(--primary) 0%, #ffedcc 70%, var(--secondary) 100%);
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: var(--text-primary);
-  transition: background-color 0.3s ease;
+  transition: background 0.5s;
+}
+
+.memory-container {
+  background: rgba(255,255,255,0.93);
+  box-shadow: var(--shadow), 0 6px 24px 0 rgba(106, 177, 255, 0.07);
+  border-radius: 1.2rem;
+  padding: 2.2rem 1.2rem 1.2rem 1.2rem;
+  margin: 32px 0;
+  width: 340px;
+  max-width: 96vw;
+  position: relative;
+  text-align: center;
+}
+
+.memory-title {
+  font-size: 2.2rem;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  font-weight: 900;
+  margin-bottom: 0.3rem;
+  text-shadow: 0 2px 14px rgba(106, 177, 255, 0.13);
+}
+
+.memory-scoreboard {
+  background: var(--score-bg);
+  border: 1.5px solid var(--border);
+  border-radius: 0.8rem;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--primary);
+  padding: 0.5rem 0.3rem;
+  margin-bottom: 1.1rem;
+  gap: 18px;
+}
+
+.memory-grid {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0 auto 1.1rem;
+  width: 100%;
+  max-width: 310px;
+  min-height: 206px;
+  justify-items: center;
+}
+
+.memory-card {
+  width: 90px;
+  height: 94px;
+  perspective: 700px;
+  cursor: pointer;
+  border-radius: 20px;
+  box-shadow: 0 6px 16px 0 rgba(247, 179, 43, 0.08);
+  transition: box-shadow 0.3s, filter 0.3s;
+  position: relative;
+  outline: none;
+}
+
+.memory-card:focus-visible {
+  box-shadow: 0 0 0 2px var(--secondary), 0 6px 16px 0 rgba(247, 179, 43, 0.06);
+}
+
+.memory-card-inner {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.44s cubic-bezier(0.7, -0.5, 0.5, 1.6);
+  transform-style: preserve-3d;
+  border-radius: 20px;
   position: relative;
 }
 
-.App-link {
-  color: var(--text-secondary);
-  transition: color 0.3s ease;
+.memory-card.flipped .memory-card-inner,
+.memory-card.matched .memory-card-inner {
+  transform: rotateY(180deg);
+  cursor: default;
 }
 
-.theme-toggle {
+.memory-card-front,
+.memory-card-back {
+  border-radius: 20px;
   position: absolute;
-  top: 20px;
-  right: 20px;
-  background-color: var(--button-bg);
-  color: var(--button-text);
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.85rem;
+  font-weight: 800;
+  user-select: none;
+  transition: background 0.28s;
+}
+
+/* Back of card (facing up initially) */
+.memory-card-back {
+  background: linear-gradient(140deg, var(--primary) 75%, var(--accent) 120%);
+  color: #fff;
+  box-shadow: 0 1px 10px 0 var(--primary);
+}
+
+/* Front of card */
+.memory-card-front {
+  background: var(--card-front);
+  color: var(--secondary);
+  transform: rotateY(180deg);
+  box-shadow: 0 2px 10px rgba(106, 177, 255, 0.13);
+}
+
+/* When matched - dopamine glow */
+.memory-card.matched .memory-card-front {
+  box-shadow: 0 0 18px 7px var(--secondary), 0 2px 14px var(--accent);
+  background: linear-gradient(120deg, var(--secondary) 80%, #fff 100%);
+  color: var(--primary);
+  animation: glow-pulse 0.7s forwards;
+}
+
+/* Glow pulse animation */
+@keyframes glow-pulse {
+  0% { box-shadow: 0 0 0 0 var(--secondary);}
+  60% { box-shadow: 0 0 26px 14px var(--accent);}
+  90% { box-shadow: 0 0 10px 5px var(--secondary);}
+  100%{ box-shadow: 0 0 12px 6px var(--secondary);}
+}
+
+/* Button styles */
+.dopamine-btn {
+  font-size: 1.07rem;
+  font-weight: 700;
+  background: linear-gradient(120deg, var(--accent) 60%, var(--primary) 100%);
+  color: #fff;
   border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-size: 14px;
-  font-weight: 600;
+  border-radius: 12px;
+  padding: 0.7rem 2.1rem;
+  margin: 0.8rem 0 0 0;
+  box-shadow: 0 2px 10px rgba(106, 177, 255, 0.09);
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  outline: none;
+  transition: background 0.2s, transform 0.13s, box-shadow 0.18s;
+  position: relative;
+  letter-spacing: 0.5px;
 }
 
-.theme-toggle:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  opacity: 0.9;
+.dopamine-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 8px 28px rgba(247, 179, 43, 0.13);
+}
+.dopamine-btn.pulse {
+  animation: btnpulse 0.53s 1;
 }
 
-.theme-toggle:active {
-  transform: translateY(0);
+/* Button pulse on win */
+@keyframes btnpulse {
+  0% { transform: scale(1);}
+  38% { transform: scale(1.13);}
+  64% { box-shadow: 0 0 8px 6px var(--secondary);}
+  100% { transform: scale(1);}
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+/* Win modal/message */
+.youwin-modal {
+  margin: 1.2rem 0 0.7rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.youwin-text {
+  font-size: 1.7rem;
+  font-weight: 900;
+  color: var(--accent);
+  text-shadow: 0 2px 16px var(--secondary), 0 1px 3px #fff;
+  padding: 0.24em 0.5em;
+}
+
+.memory-controls {
+  text-align: center;
+  margin: 0.58rem 0 0 0;
+}
+
+.memory-footer {
+  margin-top: 1.2rem;
+  color: #a29489;
+  font-size: 1.11rem;
+  text-align: center;
+  background: var(--footer-bg);
+  border-radius: 0.6em;
+  padding: 0.4em 0;
+  box-shadow: 0 1px 6px rgba(224, 176, 137, 0.06);
+}
+
+.memory-footer a {
+  color: var(--accent);
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.memory-footer a:hover {
+  color: var(--secondary);
+  text-decoration: none;
+}
+
+/* Responsive Design */
+@media (max-width: 500px) {
+  .memory-container {
+    width: 99vw;
+    min-width: unset;
+    padding: 0.8rem 0.1rem;
+    margin: 18px 0;
+    border-radius: 0;
   }
-  to {
-    transform: rotate(360deg);
+  .memory-grid {
+    max-width: 97vw;
+    gap: 0.5rem;
+    min-height: 145px;
   }
-}
-
-/* Responsive design for mobile */
-@media (max-width: 768px) {
-  .theme-toggle {
-    top: 10px;
-    right: 10px;
-    padding: 8px 16px;
-    font-size: 12px;
+  .memory-card,
+  .memory-card-front, .memory-card-back {
+    width: 64px;
+    height: 68px;
+    font-size: 1.6rem;
+    border-radius: 11px;
+  }
+  .memory-scoreboard {
+    font-size: 0.96rem;
+    min-width: unset;
+    padding: 0.3rem;
+    gap: 9px;
   }
 }
